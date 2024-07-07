@@ -8,7 +8,7 @@ var showTasks = function () {
     success: function (response, textStatus) {
       $('tbody').empty();
       response.tasks.forEach(function(task) {
-        $('tbody').append('<tr class = "my-2">' +
+        $('tbody').append('<tr class = "my-2 task-list">' +
         '<td><input class="form-check-input" type="checkbox" value = "" data-id="' + task.id + '" ' + (task.completed ? 'checked' : '') + '></td>' + 
         '<td>' + task.content + '</td>' +
         '<td><button class = "btn btn-dark btn-sm mx-2 remove" data-id = "' + task.id + '">remove</button></td>');    
@@ -86,9 +86,33 @@ var addTask = function () {
   taskInput = $('#newToDo').val('');
 }
 
+var allTasks = function () {
+  $(".task-list").each(function (i, ele) {
+    $(this).show();
+  });
+}
+
+var activeTasks = function () {
+  $(".task-list").each(function (i, ele) {
+    if ($(this).find(".form-check-input").prop("checked")) {
+      $(this).hide();
+    } else {
+      $(this).show();
+    }
+  });
+}
+
+var completeTasks = function () {
+  $(".task-list").each(function (i, ele) {
+    if ($(this).find(".form-check-input").prop("checked") !== true) {
+      $(this).hide();
+    } else {
+      $(this).show();
+    }
+  });
+}
 
 $(document).ready(function() {
-
 
   $('#addTask').on('submit', function(event) {
     event.preventDefault();
@@ -106,6 +130,18 @@ $(document).ready(function() {
       taskActive($(this).data("id"));
     }
   });
+
+  $('.toggle-all').on('click', function () {
+    allTasks();
+  })
+
+  $('.toggle-active').on('click', function () {
+    activeTasks();
+  })
+
+  $('.toggle-complete').on('click', function () {
+    completeTasks();
+  })
 
   showTasks();
 });

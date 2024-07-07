@@ -18,9 +18,24 @@
     <div class = "container">
       <h1 class = "my-3">To Do List</h1>
       <form class = "col-12" id = "addTask">
-        <input class = "task" type = "text" placeholder = "task to do" required>
+        <input class = "task" type = "text" placeholder = "task to do" id = "newToDo" required>
         <button class = "btn btn-primary btn-sm btn-dark add">add task</button>
       </form>
+      <div class = "row">
+        <div class = "col-12">
+          <table class = "table table-responsive">
+            <thead>
+              <tr>
+                <td>Tasks</td>
+                <td>Active/Completed</td>
+                <td>Remove Task</td>
+              </tr>
+            </thead>
+            <tbody class = "main">
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </body>
 </html>

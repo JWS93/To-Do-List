@@ -8,18 +8,42 @@ var showTasks = function () {
     success: function (response, textStatus) {
       $('tbody').empty();
       response.tasks.forEach(function(task) {
-        var toDo = '';
-        for (var key in task) {
-          if (key === 'content') {
-            toDo += task[key];
-          }
-        }
         $('tbody').append('<tr class = "my-2">' +
-        '<td>' + toDo + '</td>' +
-        '<td></td>' + 
+        '<td><input class="form-check-input" type="checkbox" value = "" data-id="' + task.id + '" ' + (task.completed ? 'checked' : '') + '></td>' + 
+        '<td>' + task.content + '</td>' +
         '<td><button class = "btn btn-dark btn-sm mx-2 remove" data-id = "' + task.id + '">remove</button></td>');    
       });
       console.log(response);
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
+}
+
+var taskComplete = function (id) {
+  $.ajax({
+    type: 'PUT',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '/mark_complete?api_key=1261',
+    contentType: 'application/json',
+    dataType: 'json',
+    success: function (response, textStatus) {
+      showTasks();
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    }
+  });
+}
+
+var taskActive = function (id) {
+  $.ajax({
+    type: 'PUT',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '/mark_active?api_key=1261',
+    contentType: 'application/json',
+    dataType: 'json',
+    success: function (response, textStatus) {
+      showTasks();
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
@@ -74,6 +98,14 @@ $(document).ready(function() {
   $(document).on('click', '.remove', function() {
     deleteTask($(this).data('id'));
   })
+
+  $(document).on("change", ".form-check-input", function () {
+    if (this.checked) {
+      taskComplete($(this).data("id"));
+    } else {
+      taskActive($(this).data("id"));
+    }
+  });
 
   showTasks();
 });

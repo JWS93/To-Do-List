@@ -6,20 +6,20 @@ var showTasks = function () {
     url: 'https://fewd-todolist-api.onrender.com/tasks?api_key=1261',
     dataType: 'json',
     success: function (response, textStatus) {
-      var taskList = response;
-      taskList.tasks.forEach(function(item) {
-        var task = '';
-        for (var key in item) {
+      $('tbody').empty();
+      response.tasks.forEach(function(task) {
+        var toDo = '';
+        for (var key in task) {
           if (key === 'content') {
-            task += item[key];
+            toDo += task[key];
           }
         }
         $('tbody').append('<tr class = "my-2">' +
-        '<td>' + task + '</td>' +
+        '<td>' + toDo + '</td>' +
         '<td></td>' + 
-        '<td><button class = "btn btn-dark btn-sm mx-2 remove">remove</button></td>');    
+        '<td><button class = "btn btn-dark btn-sm mx-2 remove" data-id = "' + task.id + '">remove</button></td>');    
       });
-      console.log(taskList);
+      console.log(response);
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
@@ -27,13 +27,12 @@ var showTasks = function () {
   });
 }
 
-
-var deleteTask = function () {
+var deleteTask = function (id) {
   $.ajax({
     type: 'DELETE',
-    url: 'https://fewd-todolist-api.onrender.com/tasks/?api_key=1261',
+    url: 'https://fewd-todolist-api.onrender.com/tasks/' + id + '?api_key=1261',
     success: function (response, textStatus) {
-      console.log(response);
+      showTasks();
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
@@ -54,7 +53,7 @@ var addTask = function () {
       }
     }),
     success: function (response, textStatus) {
-      console.log(response);
+      showTasks();
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
@@ -66,7 +65,6 @@ var addTask = function () {
 
 $(document).ready(function() {
 
-  showTasks();
 
   $('#addTask').on('submit', function(event) {
     event.preventDefault();
@@ -74,6 +72,8 @@ $(document).ready(function() {
   });
 
   $(document).on('click', '.remove', function() {
-    
+    deleteTask($(this).data('id'));
   })
+
+  showTasks();
 });
